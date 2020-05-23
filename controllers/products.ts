@@ -72,4 +72,42 @@ const getProducts = ( { response }: { response: any }) => {
   }
 }
 
-export { getProducts }
+// @desc  Get single product
+// @route GET /api/v1/product/:id
+const getProduct = ( { params, response }: { params: { id: number }, response: any }) => {
+  console.log(params.id)
+  const product: Product | undefined = products.find(p => p.id == params.id)
+  if (product) {
+    response.status = 200
+    response.body = {
+      success: true,
+      data: product
+    }
+  } else {
+    response.status = 404
+    response.body = {
+      success: false,
+      msg: 'no product'
+    }
+  }
+}
+
+// @desc  add product
+// @route POST /api/v1/product
+const addProduct = ( { response }: { response: any }) => {
+  response.body = 'addProduct'
+}
+
+// @desc  update product
+// @route PUT /api/v1/product/:id
+const updateProduct = ( { response }: { response: any }) => {
+  response.body = 'updateProduct'
+}
+
+// @desc  delete product
+// @route DELETE /api/v1/product/:id
+const deleteProduct = ( { response }: { response: any }) => {
+  response.body = 'deleteProduct'
+}
+
+export { getProducts, getProduct, addProduct, updateProduct, deleteProduct }

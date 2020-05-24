@@ -75,8 +75,9 @@ const getProducts = ( { response }: { response: any }) => {
 
 // @desc  Get single product
 // @route GET /api/v1/product/:id
-const getProduct = ( { params, response }: { params: { id: number }, response: any }) => {
-  const product: Product | undefined = products.find(p => p.id == params.id)
+const getProduct = ( { params, response }: { params: { id: string }, response: any }) => {
+  const numId = Number(params.id)
+  const product: Product | undefined = products.find(p => p.id == numId)
   if (product) {
     response.status = 200
     response.body = {
@@ -118,12 +119,13 @@ const addProduct = async ( { request, response }: { request: any, response: any 
 
 // @desc  update product
 // @route PUT /api/v1/product/:id
-const updateProduct = async( { params, request, response }: { params: {id: number}, request: any, response: any }) => {
-  const product: Product | undefined = products.find(p => p.id == params.id)
+const updateProduct = async( { params, request, response }: { params: {id: string}, request: any, response: any }) => {
+  const numId = Number(params.id)
+  const product: Product | undefined = products.find(p => p.id == numId)
   if (product) {
     const body = await request.body()
     const updateData: { first_name?: string; last_name?: string; description?: string; price?: number } = body.value
-    products = products.map(p => p.id == params.id ? { ...p, ...updateData } : p )
+    products = products.map(p => p.id == numId ? { ...p, ...updateData } : p )
     response.status = 200
     response.body = {
       success: true,
@@ -141,8 +143,9 @@ const updateProduct = async( { params, request, response }: { params: {id: numbe
 
 // @desc  delete product
 // @route DELETE /api/v1/product/:id
-const deleteProduct = ( { params, response }: { params: {id: number}, response: any }) => {
-  products = products.filter(p => p.id != params.id)
+const deleteProduct = ( { params, response }: { params: {id: string}, response: any }) => {
+  const numId = Number(params.id)
+  products = products.filter(p => p.id != numId)
   response.body = {
     success: true,
     msg: 'Product removed'

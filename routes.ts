@@ -3,10 +3,10 @@ import { getProducts, getProduct, addProduct, deleteProduct, updateProduct } fro
 
 const router = new Router()
 router.get('/api/v1/products', getProducts)
-      .get('/api/v1/product/:id', getProduct)
-      .post('/api/v1/product', addProduct)
-      .put('/api/v1/product/:id', updateProduct)
-      .delete('/api/v1/product/:id', deleteProduct)
+      .get('/api/v1/products/:id', getProduct)
+      .post('/api/v1/products', addProduct)
+      .put('/api/v1/products/:id', updateProduct)
+      .delete('/api/v1/products/:id', deleteProduct)
 
 // router.get('/api/v1/products', ( { response }: { response: any}) => {
 //     response.body = "Get Products"

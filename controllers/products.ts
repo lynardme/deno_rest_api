@@ -1,3 +1,4 @@
+// import { v4 } from 'https://deno.land/std/uuid/mod.ts'
 import { Product } from '../types.ts'
 
 let products: Product[] = 
@@ -75,7 +76,6 @@ const getProducts = ( { response }: { response: any }) => {
 // @desc  Get single product
 // @route GET /api/v1/product/:id
 const getProduct = ( { params, response }: { params: { id: number }, response: any }) => {
-  console.log(params.id)
   const product: Product | undefined = products.find(p => p.id == params.id)
   if (product) {
     response.status = 200
@@ -94,14 +94,49 @@ const getProduct = ( { params, response }: { params: { id: number }, response: a
 
 // @desc  add product
 // @route POST /api/v1/product
-const addProduct = ( { response }: { response: any }) => {
-  response.body = 'addProduct'
+const addProduct = async ( { request, response }: { request: any, response: any }) => {
+  const body = await request.body()
+  if(!request.hasBody) {
+    response.status = 400
+    response.body = {
+      success:false,
+      msg: 'No data'
+    }
+  } else {
+    const product: Product = body.value
+    console.log(product)
+    product.id = Math.floor((Math.random() * 20) + 11)
+    console.log(product)
+    products.push(product)
+    response.status = 201
+    response.body = {
+      success: true,
+      data: product
+    }
+  }
 }
 
 // @desc  update product
 // @route PUT /api/v1/product/:id
-const updateProduct = ( { response }: { response: any }) => {
-  response.body = 'updateProduct'
+const updateProduct = async( { params, request, response }: { params: {id: number}, request: any, response: any }) => {
+  const product: Product | undefined = products.find(p => p.id == params.id)
+  if (product) {
+    const body = await request.body()
+    const updateData: { first_name?: string; last_name?: string; description?: string; price?: number } = body.value
+    products = products.map(p => p.id == params.id ? { ...p, ...updateData } : p )
+    response.status = 200
+    response.body = {
+      success: true,
+      data: products
+    }
+
+  } else {
+    response.status = 404
+    response.body = {
+      success: false,
+      msg: 'no product'
+    }
+  }
 }
 
 // @desc  delete product
